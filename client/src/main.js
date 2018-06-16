@@ -1,15 +1,37 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App'
-import router from './router'
+import App from './App.vue'
+import VueRouter from 'vue-router'
+import Routes from './routes.js'
+import VueSweetalert2 from 'vue-sweetalert2'
+import VeeValidate from 'vee-validate'
+import Notifications from 'vue-notification'
 
-Vue.config.productionTip = false
+Vue.use(VueRouter)
+Vue.use(VueSweetalert2)
+Vue.use(VeeValidate)
+Vue.use(Notifications)
 
-/* eslint-disable no-new */
+import NProgress from 'nprogress';
+import '../node_modules/nprogress/nprogress.css'
+
+const router = new VueRouter({
+	routes : Routes,
+	mode: 'history'
+})
+
+router.beforeResolve((to, from, next) => {
+	if (to.name) {
+		NProgress.start()
+	}
+	next()
+})
+
+router.afterEach(() => {
+	NProgress.done()
+})
+
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+	el: '#app',
+	render: h => h(App),
+	router: router
 })
